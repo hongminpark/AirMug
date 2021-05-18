@@ -1,0 +1,247 @@
+@charset 'utf-8';
+
+html {
+	font-family: 'Noto Sans KR', sans-serif;
+	font-size: 14px;
+}
+body {
+	overflow-x: hidden;
+	color: rgb(29, 29, 31);
+	letter-spacing: -0.05em;
+	background-color: white;
+}
+p {
+	line-height: 1.6;	
+}
+a {
+	color: rgb(29, 29, 31);
+	text-decoration: none;
+}
+
+.global-nav {
+	height: 44px;
+	padding: 0 1rem;
+
+	/* 브라우저에서 공간 차지 안하도록 */
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 10;
+}
+.local-nav {
+	height: 52px;
+	border-bottom: 1px solid #ddd;
+	padding: 0 1rem;
+
+	position: absolute;
+	top: 45px;
+	left: 0;
+	width: 100%;
+	z-index: 11;
+}
+
+.global-nav-links,
+.local-nav-links {
+	/* studiomeal.com/archives/197 */
+	display: flex; /* 자기 크기만큼 */
+	align-items: center;
+	max-width: 1000px;
+	margin: 0 auto;
+	height: 100%; /* 부모만큼 */
+}
+/* margin에 auto가 들어가면, 내가 가진 영역을 다 사용함 
+center 정렬할 때 auto 많이 사용함 
+*/
+.global-nav-links {
+	justify-content: space-between;
+}
+.local-nav-links a:not(.product-name) {
+	margin-left: 2em;
+	font-size: 0.8rem;
+}
+.product-name {
+	margin-right: auto;
+	font-size: 1.4rem;
+	font-weight: bold;
+}
+
+.scroll-section {
+	position: relative;
+	padding-top: 50vh; /* Viewport Height 전체창높이의 50%로 마진 */
+}
+
+#scroll-section-0 h1 {
+	/* zindex를 주기 위해 position: relative 설정 */
+	position: relative;
+	top: -10vh;
+	z-index: 5;
+	font-size: 10rem;
+	text-align: center;
+}
+#scroll-section-2 .main-message {
+	font-size: 3.5rem;
+}
+
+#scroll-section-2 .b {
+	top: 10%;
+	left: 40%;
+}
+#scroll-section-2 .c {
+	top: 15%;
+	left: 45%;
+}
+
+.main-message {
+	display: flex;
+	align-items: center; /* 세로 정렬 */
+	justify-content: center;
+	margin: 5px 0;
+	height: 3em;
+	font-size: 2.5rem;
+	opacity: 0;
+	top: 40vh;
+}
+
+.main-message p {
+	line-height: 1.2;
+	font-weight: bold;
+	text-align: center;
+}
+
+.main-message small {
+	display: block; /* 자체가 개행됨 */
+	font-size: 1.2rem;
+	margin-bottom: 0.5em;
+}
+
+.description {
+	font-size: 1.2rem;
+	color: #888;
+	padding: 0 1rem;
+	max-width: 1000px;
+	margin: 0 auto; /* center 정렬 */
+}
+
+.description strong {
+	float: left;
+	margin-right: 0.2em;
+	font-size: 3rem;
+	color: black;
+	/* margin은 em으로 font는 rem으로 하는 이유
+	루트 사이즈가 아니라 현재 폰트사이즈에 비례하게 할 수 있음 */
+}
+
+.desc-message {
+	font-weight: bold;
+	width: 50%;
+	opacity: 0;
+}
+
+.pin {
+	width: 1px;
+	height: 100px;
+	background: black;
+}
+
+.mid-message {
+	padding: 0 1rem;
+	font-size: 2rem;
+	color: #888;
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.mid-message strong {
+	color: black;
+}
+
+.canvas-caption {
+	color: #888;
+	padding: 0 1rem;
+	font-size: 1.2rem;
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.footer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 7rem;
+	background: darkorange;
+	color: white;
+}
+
+.sticky-elem {
+	display: none;
+	position: fixed;
+	left: 0;
+	width: 100%;
+}
+
+.sticky-elem-canvas {
+	top: 0;
+	height: 100%;
+}
+
+.sticky-elem-canvas canvas {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+}
+
+.image-blend-canvas {
+	/* background: blue; */
+}
+
+#show-scene-0 #scroll-section-0 .sticky-elem,
+#show-scene-1 #scroll-section-1 .sticky-elem,
+#show-scene-2 #scroll-section-2 .sticky-elem,
+#show-scene-3 #scroll-section-3 .sticky-elem {
+	display: block;
+}
+
+#scroll-section-3 {
+	/* 가운데정렬 */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+@media (min-width: 1024px) {
+	#scroll-section-0 h1 {
+		font-size: 9vw;
+	}
+	.main-message {
+		font-size: 4vw;
+	}
+	.main-message small{
+		font-size: 1.5vw;
+	}
+	.description {
+		font-size: 2rem;
+	}
+	.description strong {
+		font-size: 6rem;
+	}
+	#scroll-section-2 .main-message {
+		font-size: 5vw;
+	}
+	.desc-message {
+		width: 20%;
+	}
+	.mid-message {
+		font-size: 4vw;
+	}
+	.canvas-caption {
+		font-size: 2rem;
+	}
+	#scroll-section-2 .b {
+		top: 20%;
+		left: 53%;
+	}
+	#scroll-section-2 .c {
+		top: 55%;
+	}	
+}
