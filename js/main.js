@@ -6,6 +6,12 @@
     let currentScene = 0;
     let enterNewScene = false;
 
+    // 애니메이션 가속기능을 위한 변수
+    let acc = 0.1
+    let delayedYOffset = 0
+    let requestAnimationId;
+    let isAnimating;
+
     const sceneInfo = [
         // 브라우저 높이의 5배로 세팅
         // 해당 구간의 스크롤 가능 높이
@@ -187,11 +193,11 @@
             prevScrollHeight += sceneInfo[i].scrollHeight;
         }
 
-        if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+        if (delayedYOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
             currentScene++;
             document.body.setAttribute('id', `show-scene-${currentScene}`);
             enterNewScene = true
-        } else if (yOffset < prevScrollHeight) {
+        } else if (delayedYOffset < prevScrollHeight) {
             if (currentScene === 0) return;
             currentScene--;
             document.body.setAttribute('id', `show-scene-${currentScene}`);
@@ -214,10 +220,9 @@
 
         switch (currentScene) {
             case 0:                
-                let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
-                objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+                // let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
+                // objs.context.drawImage(objs.videoImages[sequence], 0, 0);
                 objs.canvas.style.opacity = calcValues(values.canvas_opacity, currentYOffset)
-
 
                 // console.log('0 play');
                 if (scrollRatio <= 0.22) {
@@ -263,8 +268,8 @@
                 break;
     
             case 2:
-                let sequence2 = Math.round(calcValues(values.imageSequence, currentYOffset));
-                objs.context.drawImage(objs.videoImages[sequence2], 0, 0);
+                // let sequence2 = Math.round(calcValues(values.imageSequence, currentYOffset));
+                // objs.context.drawImage(objs.videoImages[sequence2], 0, 0);
 
                 if (scrollRatio <= 0.5) {
                     objs.canvas.style.opacity = calcValues(values.canvas_opacity_in, currentYOffset);
@@ -463,7 +468,37 @@
         yOffset = window.pageYOffset
         scrollLoop();
         checkMenu();
+
+        if (!isAnimating) {
+            isAnimating = true
+            requestAnimationId = requestAnimationFrame(loop)
+        }
     })
+
+    function loop() {
+
+        if (!enterNewScene) {
+            delayedYOffset = delayedYOffset + (yOffset - delayedYOffset) * acc
+            const currentYOffset = delayedYOffset - prevScrollHeight
+            const objs = sceneInfo[currentScene].objs
+            const values = sceneInfo[currentScene].values
+            
+            if (currentScene === 0 || currentScene === 2) {
+                let sequence = Math.round(calcValues(values.imageSequence, currentYOffset))
+                if (objs.videoImages[sequence]) {
+                    objs.context.drawImage(objs.videoImages[sequence], 0, 0)
+                }
+            }
+        }
+
+
+        requestAnimationId = requestAnimationFrame(loop)                
+        if (Math.abs(yOffset - delayedYOffset) < 1) {
+            cancelAnimationFrame(requestAnimationId)
+            isAnimating = false
+        }
+    }
+
     window.addEventListener('resize', setLayout);
     
 

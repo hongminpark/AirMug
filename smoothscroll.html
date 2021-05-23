@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-9">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>스크으로오올 </title>
+        <style>
+            body {
+                height: 500vh;
+            }
+            .box {
+                position: fixed;
+                top: 100px;
+                left: 0;
+                width: 0;
+                height: 100px;
+                background: grey;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="box">
+
+        </div>
+        <script>
+            const box = document.querySelector(".box")
+            let acc = 0.1
+            let delayedYOffset = 0
+            let requestAnimationId;
+            let isAnimating;
+
+            window.addEventListener('scroll', () => {
+                if (!isAnimating) {
+                    isAnimating = true
+                    requestAnimationId = requestAnimationFrame(loop)
+                }
+            })
+
+            function loop() {
+                delayedYOffset = delayedYOffset + (window.pageYOffset - delayedYOffset) * acc
+                let percent = (delayedYOffset / (document.body.scrollHeight - window.innerHeight)) * 100
+                box.style.width = `${percent}vw`
+
+                console.log("looping")
+                requestAnimationId = requestAnimationFrame(loop)                
+                if (Math.abs(window.pageYOffset - delayedYOffset) < 1) {
+                    cancelAnimationFrame(requestAnimationId)
+                    isAnimating = false
+                }
+
+            }
+
+
+        </script>
+    </body>
+</html>
