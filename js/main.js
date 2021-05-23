@@ -110,7 +110,11 @@
             },
             values: {
                 rect1X: [0, 0, {start: 0, end: 0}],
-                rect2X: [0, 0, {start: 0, end: 0}],
+                rect2X: [0, 0, {start: 0, end: 0}],                
+                blendHeight: [0, 0, {start: 0, end: 0}],
+                canvas_scale: [0, 0, {start: 0, end: 0}],
+                canvasCaption_opacity: [0, 1, {start: 0, end: 0}],
+                canvasCaption_translateY: [20, 0, {start: 0, end: 0}],
                 rectStartY: 0
             }
         }
@@ -139,6 +143,14 @@
         }
     }
     setCanvasImages();
+
+    function checkMenu() {
+        if (yOffset > 44) {
+            document.body.classList.add('local-nav-sticky');
+        } else {
+            document.body.classList.remove('local-nav-sticky');
+        }
+    }
 
     function setLayout() {
         // 각 스크롤 섹션 높이 세팅
@@ -295,10 +307,43 @@
                     objs.pinC.style.transform = `scaleY(${calcValues(values.pinC_scaleY, currentYOffset)})`;
                 }
     
+                // scene3 미리 렌더링
+                if (scrollRatio > 0.9) {
+                    const objs = sceneInfo[3].objs
+                    const values = sceneInfo[3].values
+                    const widthRatio = window.innerWidth / objs.canvas.width;
+                    const heightratio = window.innerHeight / objs.canvas.height;
+    
+                    // 더 긴 값 기준으로 AspectRatio의 비율 선택 
+                    canvasScaleRatio = widthRatio <= heightratio ? heightratio : widthRatio;
+                    objs.canvas.style.transform = `scale(${canvasScaleRatio})`
+                    objs.context.fillStyle = 'white'
+                    objs.context.drawImage(objs.images[0], 0, 0);
+    
+                    // 캔버스 사이즈에 맞춰 가정한 innerWidth, innerHeight 
+                    const reCalculatedInnerWidth = document.body.offsetWidth / canvasScaleRatio
+                    const reCalculatedInnerHeight = window.innerHeight  / canvasScaleRatio
+    
+                    // 양쪽 가릴 SideCanvas
+                    const whiteRectWidth = reCalculatedInnerWidth * 0.15;
+    
+                    // [0]: 출발위치, [1]: 종료위치
+                    // canvas에 대한 상대위치이기 때문. <- 이해안가면 강의 다시 보기
+                    values.rect1X[0] = (objs.canvas.width - reCalculatedInnerWidth) / 2;
+                    values.rect1X[1] = values.rect1X[0] - whiteRectWidth
+                    values.rect2X[0] = values.rect1X[0] + reCalculatedInnerWidth - whiteRectWidth
+                    values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
+    
+                    // x, y, width, height
+                    // parseInt 정수로 하면 좀더 빠름
+                    objs.context.fillRect(values.rect1X[0], 0, parseInt(whiteRectWidth), objs.canvas.height);
+                    objs.context.fillRect(values.rect2X[0], 0, parseInt(whiteRectWidth), objs.canvas.height);
+    
+                }
                 break;
     
             case 3:
-                // console.log('3 play');
+                // console.log('3 play');                
                 const widthRatio = window.innerWidth / objs.canvas.width;
                 const heightratio = window.innerHeight / objs.canvas.height;
 
@@ -340,6 +385,48 @@
                 objs.context.fillRect(parseInt(calcValues(values.rect1X, currentYOffset)), 0, parseInt(whiteRectWidth), objs.canvas.height);
                 objs.context.fillRect(parseInt(calcValues(values.rect2X, currentYOffset)), 0, parseInt(whiteRectWidth), objs.canvas.height);
             
+                if (scrollRatio < values.rect1X[2].end) {
+                    objs.canvas.classList.remove('sticky');
+                } else {
+                    // 이미지 블렌딩 step 실행
+                    values.blendHeight[0] = 0;
+                    values.blendHeight[1] = objs.canvas.height;
+                    values.blendHeight[2].start = values.rect1X[2].end
+                    values.blendHeight[2].end = values.blendHeight[2].start + 0.2;
+                    const blendHeight = calcValues(values.blendHeight, currentYOffset)
+                    
+                    objs.context.drawImage(objs.images[1], 
+                        0, objs.canvas.height - blendHeight, objs.canvas.width, blendHeight,
+                        0, objs.canvas.height - blendHeight, objs.canvas.width, blendHeight,
+                        )
+
+                    objs.canvas.classList.add('sticky');
+                    objs.canvas.style.top=`-${(objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2}px`
+
+                    if (scrollRatio > values.blendHeight[2].end) {
+                        // canvasScale세팅
+                        values.canvas_scale[0] = canvasScaleRatio
+                        values.canvas_scale[1] = document.body.offsetWidth / (1.5 * objs.canvas.width)
+                        values.canvas_scale[2].start = values.blendHeight[2].end;
+                        values.canvas_scale[2].end = values.canvas_scale[2].start + 0.2;
+
+                        objs.canvas.style.transform = `scale(${calcValues(values.canvas_scale, currentYOffset)})`
+                        objs.canvas.style.marginTop = 0;
+                    }
+
+                    if (values.canvas_scale[2].end > 0 && scrollRatio > values.canvas_scale[2].end) {
+                        objs.canvas.classList.remove('sticky');
+                        objs.canvas.style.marginTop = `${scrollHeight * 0.4}px`;
+
+                        values.canvasCaption_opacity[2].start = values.canvas_scale[2].end
+                        values.canvasCaption_opacity[2].end = values.canvasCaption_opacity[2].start + 0.1
+                        values.canvasCaption_translateY[2].start = values.canvasCaption_opacity[2].start
+                        values.canvasCaption_translateY[2].end = values.canvasCaption_opacity[2].end
+                        objs.canvasCaption.style.opacity = calcValues(values.canvasCaption_opacity, currentYOffset)
+                        objs.canvasCaption.style.transform = `translate3d(0,${calcValues(values.canvasCaption_translateY, currentYOffset)}%,0)`
+                    }
+                }
+
                 break;
         }    
     }
@@ -375,6 +462,7 @@
     window.addEventListener('scroll', () => {
         yOffset = window.pageYOffset
         scrollLoop();
+        checkMenu();
     })
     window.addEventListener('resize', setLayout);
     

@@ -40,6 +40,12 @@ a {
 	width: 100%;
 	z-index: 11;
 }
+.local-nav-sticky .local-nav {
+	position: fixed;
+	top: 0;
+	background: rgba(255,255,255,0.1);
+	backdrop-filter: saturate(180%) blur(15px);
+}
 
 .global-nav-links,
 .local-nav-links {
@@ -161,7 +167,7 @@ center 정렬할 때 auto 많이 사용함
 	padding: 0 1rem;
 	font-size: 1.2rem;
 	max-width: 1000px;
-	margin: 0 auto;
+	margin: -8em 0 auto;
 }
 
 .footer {
@@ -191,8 +197,9 @@ center 정렬할 때 auto 많이 사용함
 	left: 50%;
 }
 
-.image-blend-canvas {
-	/* background: blue; */
+.image-blend-canvas.sticky {
+	position: fixed;
+	top: 0;
 }
 
 #show-scene-0 #scroll-section-0 .sticky-elem,
@@ -220,6 +227,7 @@ center 정렬할 때 auto 많이 사용함
 		font-size: 1.5vw;
 	}
 	.description {
+		padding: 0;
 		font-size: 2rem;
 	}
 	.description strong {
@@ -232,9 +240,11 @@ center 정렬할 때 auto 많이 사용함
 		width: 20%;
 	}
 	.mid-message {
+		padding: 0;
 		font-size: 4vw;
 	}
 	.canvas-caption {
+		padding: 0;
 		font-size: 2rem;
 	}
 	#scroll-section-2 .b {
