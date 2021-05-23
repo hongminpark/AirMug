@@ -45,6 +45,8 @@ a {
 	top: 0;
 	background: rgba(255,255,255,0.1);
 	backdrop-filter: saturate(180%) blur(15px);
+	/* iOS */
+	-webkit-backdrop-filter: saturate(180%) blur(15px);
 }
 
 .global-nav-links,
@@ -167,7 +169,7 @@ center 정렬할 때 auto 많이 사용함
 	padding: 0 1rem;
 	font-size: 1.2rem;
 	max-width: 1000px;
-	margin: -8em 0 auto;
+	margin: -24rem auto 0;
 }
 
 .footer {
@@ -207,6 +209,10 @@ center 정렬할 때 auto 많이 사용함
 #show-scene-2 #scroll-section-2 .sticky-elem,
 #show-scene-3 #scroll-section-3 .sticky-elem {
 	display: block;
+	will-change: transform, opacity;
+}
+.scrol-effect-end .sticky-elem {
+	display: none !important;	
 }
 
 #scroll-section-3 {
@@ -235,6 +241,17 @@ center 정렬할 때 auto 많이 사용함
 	opacity: 0;
 }
 
+body.before-load {
+	overflow: hidden;
+}
+.container {
+	/* iPhone 가로 스크롤 방지 */
+	overflow-x: hidden
+}
+
+.before-load .container {
+	display: none;
+}
 .before-load .loading {
 	opacity: 1;
 }
@@ -259,6 +276,9 @@ center 정렬할 때 auto 많이 사용함
 	stroke-dasharray: 157; /* getTotalLength 로 stroke의 길이를 얻어올 수 있음 */
 	stroke-dashoffset: 0; /* dash를 이동시킴 */
 	animation: loading-circle-ani 1s infinite;
+}
+.normal-content {
+	margin-bottom: 10rem;
 }
 
 @media (min-width: 1024px) {
@@ -291,6 +311,7 @@ center 정렬할 때 auto 많이 사용함
 	.canvas-caption {
 		padding: 0;
 		font-size: 2rem;
+		margin-top: -8rem;
 	}
 	#scroll-section-2 .b {
 		top: 20%;
