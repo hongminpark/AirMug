@@ -1,7 +1,8 @@
 // 즉시 호출 함수
 (() => {
 
-    let yOffset = 0;
+    // 
+    let yOffset = 0; // window.pageYOffset과 동일
     let prevScrollHeight = 0;
     let currentScene = 0;
     let enterNewScene = false;
@@ -148,7 +149,6 @@
             sceneInfo[3].objs.images.push(imgElem3);
         }
     }
-    setCanvasImages();
 
     function checkMenu() {
         if (yOffset > 44) {
@@ -460,21 +460,6 @@
         return rv
     }
 
-    window.addEventListener('load', () => {
-        setLayout();
-        sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0)
-    });
-    window.addEventListener('scroll', () => {
-        yOffset = window.pageYOffset
-        scrollLoop();
-        checkMenu();
-
-        if (!isAnimating) {
-            isAnimating = true
-            requestAnimationId = requestAnimationFrame(loop)
-        }
-    })
-
     function loop() {
 
         if (!enterNewScene) {
@@ -499,8 +484,30 @@
         }
     }
 
-    window.addEventListener('resize', setLayout);
-    
+    // Event Handler 추가
+    window.addEventListener('load', () => {
+        setLayout();
+        sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0)
+    });
+    window.addEventListener('scroll', () => {
+        yOffset = window.pageYOffset
+        scrollLoop();
+        checkMenu();
+
+        if (!isAnimating) {
+            isAnimating = true
+            requestAnimationId = requestAnimationFrame(loop)
+        }
+    })
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 600) {
+            setLayout();
+        }
+        sceneInfo[3].values.rectStartY = 0
+    })
+    window.addEventListener('orientationchange', setLayout)
+
+    setCanvasImages();    
 
 })();
 
