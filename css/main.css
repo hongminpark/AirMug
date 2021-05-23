@@ -216,6 +216,51 @@ center 정렬할 때 auto 많이 사용함
 	align-items: center;
 }
 
+.loading {
+	/* 한가운데 정렬을 위한 3가지 요소 */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	/* top: 0;
+	bottom: 0;
+	right: 0;
+	left : 0; */
+	z-index: 100;
+	background-color: white;
+	transition: 0.5s;
+	opacity: 0;
+}
+
+.before-load .loading {
+	opacity: 1;
+}
+@keyframes loading-spin-ani {
+	100% {transform: rotate(360deg)}
+}
+@keyframes loading-circle-ani {
+	0% {stroke-dashoffset: 157;}
+	75% {stroke-dashoffset: -147;}
+	100% {stroke-dashoffset: -157;}
+}
+.loading-circle {
+	/* 반지름 적용했는데 필요한가 ?  */
+	width: 54px;
+	height: 54px;
+	animation: loading-spin-ani 3s infinite;
+}
+.loading-circle circle {
+	stroke: black;
+	stroke-width: 4;	
+	fill: transparent;
+	stroke-dasharray: 157; /* getTotalLength 로 stroke의 길이를 얻어올 수 있음 */
+	stroke-dashoffset: 0; /* dash를 이동시킴 */
+	animation: loading-circle-ani 1s infinite;
+}
+
 @media (min-width: 1024px) {
 	#scroll-section-0 h1 {
 		font-size: 9vw;

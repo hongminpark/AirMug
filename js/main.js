@@ -488,6 +488,7 @@
     window.addEventListener('load', () => {
         setLayout();
         sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0)
+        document.body.classList.remove("before-load")
     });
     window.addEventListener('scroll', () => {
         yOffset = window.pageYOffset
@@ -506,6 +507,9 @@
         sceneInfo[3].values.rectStartY = 0
     })
     window.addEventListener('orientationchange', setLayout)
+    document.querySelector(".loading").addEventListener('transitionend', (event) => {
+        document.body.removeChild(event.currentTarget)
+    })
 
     setCanvasImages();    
 
